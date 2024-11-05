@@ -300,7 +300,7 @@ void genotype_small_dup(std::string& contig_name, duplication_t* sv, open_samFil
 		}
 	}
 	sv->compl_inside_dup = compl_inside_dup;
-
+	
 	bool not_enough_lbp_reads = lbp_alt_better_seqs.size() < 3, not_enough_rbp_reads = rbp_alt_better_seqs.size() < 3;
 
 	for (int i = 0; i < read_seqs.size(); i++) {
@@ -334,6 +334,7 @@ void genotype_small_dup(std::string& contig_name, duplication_t* sv, open_samFil
 		return;
 	}
 
+
 	// calculate GT
 	auto gt_before_qc = calculate_small_dup_genotype(sv->alt_better, sv->ref_better);
 	sv->before_read_qc_gt = gt_before_qc.first;
@@ -356,7 +357,7 @@ void genotype_small_dup(std::string& contig_name, duplication_t* sv, open_samFil
 			log_ss << ref_jun_aln.query_begin << " " << ref_jun_aln.query_end << " " << ref_jun_aln.cigar_string << std::endl;
 
 			std::string left_anchor = junction_seq.substr(0, 50);
-			std::string right_anchor = junction_seq.substr(junction_seq.length()-50);
+			std::string right_anchor = junction_seq.substr(junction_seq.length() >= 50 ? junction_seq.length()-50 : 0);
 			StripedSmithWaterman::Alignment la_aln, ra_aln;
 			aligner.Align(left_anchor.c_str(), ref_seq, ref_len, filter, &la_aln, 0);
 			aligner.Align(right_anchor.c_str(), ref_seq, ref_len, filter, &ra_aln, 0);
@@ -452,6 +453,7 @@ void genotype_small_dup(std::string& contig_name, duplication_t* sv, open_samFil
 			if (strong) sv->alt_better_strong++;
 		}
 	}
+
 
 	// recalculate GT after excluding poor quality reads
 	auto gt = calculate_small_dup_genotype(sv->alt_better_goodqual, sv->ref_better);
@@ -1676,6 +1678,7 @@ int main(int argc, char* argv[]) {
 		inss_by_chr_nums.push_back({e.second.size(), e.first});
 	}
 	std::sort(inss_by_chr_nums.begin(), inss_by_chr_nums.end(), std::greater<>());
+
 
     ctpl::thread_pool thread_pool3(config.threads);
     for (auto& p : dels_by_chr_nums) {
