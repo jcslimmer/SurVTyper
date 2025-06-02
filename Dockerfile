@@ -22,9 +22,9 @@ RUN apt-get install -y python3 python3-dev python3-pysam python3-pyfaidx python3
 
 COPY random_pos_generator.py survtyper.py ./
 
-RUN /bin/echo "#!/bin/bash" > run.sh
-RUN /bin/echo "" >> run.sh
-RUN /bin/echo "python3 survtyper.py" >> run.sh
-RUN chmod a+x run.sh
+RUN /bin/echo "#!/bin/bash" > /home/run.sh
+RUN /bin/echo "" >> /home/run.sh
+RUN /bin/echo "python3 /home/survtyper.py \"\$@\"" >> /home/run.sh
+RUN chmod a+x /home/run.sh
 
 ENTRYPOINT ["/home/run.sh"]
