@@ -27,4 +27,4 @@ RUN /bin/echo "" >> run.sh
 RUN /bin/echo "python3 survtyper.py" >> run.sh
 RUN chmod a+x run.sh
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["/home/run.sh"]
